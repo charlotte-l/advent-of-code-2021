@@ -43,17 +43,23 @@ export async function Solution(): Promise<number> {
   return Math.floor(gammaValue * epsilonValue)
 }
 
-export function SolutionPartTwo(): number {
-  const input: Array<string> = read(path.resolve(__dirname, 'input.txt'), { encoding: 'utf8' })
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
+export async function SolutionPartTwo(): Promise<number> {
+  // read in the puzzle input
+  const puzzleInput: Array<string> = []
+
+  const rl = createInterface({
+    input: createReadStream(path.resolve(__dirname, 'input.txt')),
+  })
+
+  for await (const line of rl) {
+    puzzleInput.push(line)
+  }
 
   // oxygenGenerator uses most common value, keeps 1 for equal
-  const oxygenGeneratorRating = reduce(input, 0, (counts: Array<number>) => {
-    if (counts[1] > counts[0]) {
+  const oxygenGeneratorRating = reduce(puzzleInput, 0, (counter: Array<number>) => {
+    if (counter[1] > counter[0]) {
       return 1
-    } else if (counts[1] < counts[0]) {
+    } else if (counter[1] < counter[0]) {
       return 0
     } else {
       return 1
@@ -61,10 +67,10 @@ export function SolutionPartTwo(): number {
   })
 
   // co2scrubber uses least common value, keeps 0 for equal
-  const co2ScrubberRating = reduce(input, 0, (counts: Array<number>) => {
-    if (counts[0] > counts[1]) {
+  const co2ScrubberRating = reduce(puzzleInput, 0, (counter: Array<number>) => {
+    if (counter[0] > counter[1]) {
       return 1
-    } else if (counts[0] < counts[1]) {
+    } else if (counter[0] < counter[1]) {
       return 0
     } else {
       return 0
@@ -73,22 +79,24 @@ export function SolutionPartTwo(): number {
 
   return parseInt(oxygenGeneratorRating, 2) * parseInt(co2ScrubberRating, 2)
 
-  function reduce(input: Array<string>, place: number, comparator: (counts: Array<number>) => number): string {
-    const counts = [0, 0]
+  function reduce(input: Array<string>, index: number, comparator: (counter: Array<number>) => number): string {
+    const counter = [0, 0] // 0s, 1s
     if (input.length === 1) {
       // stop if only one number is left
       return input[0]
     } else {
       for (const value of input) {
-        const bit = +value[place] // cast to number
-        counts[bit]++ // increment 0/1 counter
+        const bit = +value[index] // cast to number
+        counter[bit]++ // increment 0/1 counter
       }
-      const bit = comparator(counts)
-      
+
+      // decide which bit is the 'valuable' one for the desired data (most/least common)
+      const bit = comparator(counter)
+
       // iterate to next signficant bit
       return reduce(
-        input.filter((value) => +value[place] === bit),
-        place + 1,
+        input.filter((value) => +value[index] === bit),
+        index + 1,
         comparator,
       )
     }

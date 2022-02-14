@@ -9,7 +9,7 @@ describe('Solution', () => {
 
 describe('Solution part 2', () => {
   it('should return a number greater than 0', async () => {
-    const value = SolutionPartTwo()
+    const value = await SolutionPartTwo()
     expect(value).toBeGreaterThan(0)
   })
 })
