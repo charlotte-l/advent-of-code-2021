@@ -63,7 +63,7 @@ export async function SolutionPartTwo(): Promise<number> {
     const input = line.split(' ')
     puzzleInput.push({
       direction: input[0],
-      units: parseInt(input[1])
+      units: parseInt(input[1]),
     })
   }
 
@@ -73,7 +73,7 @@ export async function SolutionPartTwo(): Promise<number> {
     switch (puzzleInput[i].direction) {
       case 'forward':
         currentPosition.horizontal += puzzleInput[i].units
-        currentPosition.depth += (currentPosition.aim * puzzleInput[i].units)
+        currentPosition.depth += currentPosition.aim * puzzleInput[i].units
         break
       case 'up':
         currentPosition.aim -= puzzleInput[i].units

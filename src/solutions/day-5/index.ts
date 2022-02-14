@@ -1,5 +1,5 @@
 function Solution() {
-    return true;
+  return true
 }
 
-export default Solution;
+export default Solution

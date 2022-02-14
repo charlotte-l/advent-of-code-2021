@@ -1,9 +1,6 @@
 const presets =
   process.env['NODE_ENV'] !== 'production'
-    ? [
-        ['@babel/preset-env', { targets: { node: 'current' } }],
-        '@babel/preset-typescript',
-      ]
+    ? [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript']
     : null
 
 const plugins = [['macros']]
